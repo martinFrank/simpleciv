@@ -1,0 +1,2 @@
+# simpleciv
+simple civ implementation
