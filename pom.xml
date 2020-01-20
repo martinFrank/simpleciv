@@ -162,7 +162,7 @@
                     <artifactId>javafx-maven-plugin</artifactId>
                     <version>0.0.3</version>
                     <configuration>
-                        <mainClass>com.github.martinfrank.dynamocode.App</mainClass>
+                        <mainClass>com.github.martinfrank.simpleciv.App</mainClass>
                     </configuration>
                 </plugin>
             </plugins>
