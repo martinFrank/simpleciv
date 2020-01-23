@@ -2,13 +2,13 @@ package com.github.martinfrank.simpleciv.map;
 
 import com.github.martinfrank.drawlib.Point;
 import com.github.martinfrank.maplib.MapNode;
-import com.github.martinfrank.simpleciv.mapdata.SimpleCivMapNodeData;
+import com.github.martinfrank.simpleciv.mapdata.CivMapNodeData;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class SimpleCivMapNode extends MapNode<SimpleCivMapNodeData, SimpleCivMapField, SimpleCivMapEdge, SimpleCivMapNode> {
+public class CivMapNode extends MapNode<CivMapNodeData, CivMapField, CivMapEdge, CivMapNode> {
 
-    public SimpleCivMapNode(SimpleCivMapNodeData mapNodeData) {
+    public CivMapNode(CivMapNodeData mapNodeData) {
         super(mapNodeData);
     }
 

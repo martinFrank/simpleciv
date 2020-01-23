@@ -2,12 +2,12 @@ package com.github.martinfrank.simpleciv.map;
 
 import com.github.martinfrank.maplib.Map;
 import com.github.martinfrank.maplib.MapStyle;
-import com.github.martinfrank.simpleciv.mapdata.SimpleCivMapData;
+import com.github.martinfrank.simpleciv.mapdata.CivMapData;
 
-public class SimpleCivMap extends Map<SimpleCivMapData, SimpleCivMapField, SimpleCivMapEdge, SimpleCivMapNode, SimpleCivMapWalker> {
+public class CivMap extends Map<CivMapData, CivMapField, CivMapEdge, CivMapNode, CivMapWalker> {
 
 
-    public SimpleCivMap(int width, int height, MapStyle style, SimpleCivMapData mapData) {
+    public CivMap(int width, int height, MapStyle style, CivMapData mapData) {
         super(width, height, style, mapData);
     }
 

@@ -1,19 +1,18 @@
 package com.github.martinfrank.simpleciv;
 
-import com.github.martinfrank.maplib.MapStyle;
-import com.github.martinfrank.simpleciv.map.*;
+import com.github.martinfrank.simpleciv.game.CivGame;
+import com.github.martinfrank.simpleciv.gui.ControllerFactory;
+import com.github.martinfrank.simpleciv.res.ResourceManager;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
+import java.io.IOException;
 
 public class App extends Application {
 
@@ -23,80 +22,45 @@ public class App extends Application {
         launch(args);
     }
 
-    private SimpleCivMap simpleCivMap;
-    private SimpleCivMapWalker walker;
+    private CivGame civGame;
+    private Pane root;
 
-
-    private SimpleCivMapField start;
-    private SimpleCivMapField end;
 
     @Override
-    public void start(Stage primaryStage) {
-        SimpleCivMapPartFactory mapPartFactory = new SimpleCivMapPartFactory();
-        SimpleCivMapFactory mapFactory = new SimpleCivMapFactory(mapPartFactory);
-//        demoMap = mapFactory.createMap(12, 6, MapStyle.HEX_HORIZONTAL);
-        simpleCivMap = mapFactory.createMap(12, 6, MapStyle.SQUARE_DIAMOND);
-        simpleCivMap.scale(14f);
-        walker = mapPartFactory.createWalker();
+    public void init() {
+        ResourceManager resourceManager = new ResourceManager(getClass().getClassLoader());
+        civGame = new CivGame(resourceManager);
+        ControllerFactory controllerFactory = new ControllerFactory(civGame);
 
-        shuffleWalkCosts();
-
-        primaryStage.setTitle("Hello World!");
-        BorderPane border = new BorderPane();
-        double w = simpleCivMap.getTransformed().getWidth();
-        double h = simpleCivMap.getTransformed().getHeight();
-        Canvas canvas = new Canvas(w, h);
-        canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
-            int x = (int) mouseEvent.getX();
-            int y = (int) mouseEvent.getY();
-            SimpleCivMapNode point = simpleCivMap.getNodeAt(x, y);
-            SimpleCivMapEdge edge = simpleCivMap.getEdgeAt(x, y);
-            SimpleCivMapField field = simpleCivMap.getFieldAt(x, y);
-            LOGGER.debug("x/y:{}/{} Point:{}", x, y, point);
-            LOGGER.debug("x/y:{}/{} Edge:{}", x, y, edge);
-            LOGGER.debug("x/y:{}/{} Field:{}", x, y, field);
-
-        });
-
-        Button btn = new Button();
-        btn.setText("Shuffle Map");
-        btn.setOnAction(event -> {
-            shuffleWalkCosts();
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            drawShapes(gc);
-        });
-        border.setBottom(btn);
-
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc);
-
-        border.setCenter(canvas);
-        primaryStage.setScene(new Scene(border));
-        primaryStage.show();
-    }
-
-    private void shuffleWalkCosts() {
-        Random random = new Random();
-        for (SimpleCivMapField demoMapField : simpleCivMap.getFields()) {
-            demoMapField.getData().setWalkCostFactor(1d);
-            demoMapField.getData().markAsPath(false);
-            int die = random.nextInt(6) + 1;
-            if (die == 1) {
-                demoMapField.getData().setWalkCostFactor(6d);
-            }
-            if (die == 2) {
-                demoMapField.getData().setWalkCostFactor(3d);
-            }
-        }
-        start = null;
-        end = null;
-    }
-
-
-    private void drawShapes(GraphicsContext gc) {
-        if (simpleCivMap != null) {
-            simpleCivMap.draw(gc);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(resourceManager.getGuiRoot());
+            fxmlLoader.setControllerFactory(controllerFactory);
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            LOGGER.debug("error", e);
         }
     }
+
+    @Override
+    public void start(Stage stage) {
+        if (wasInitSuccessFul()) {
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("tbd: set title");
+            stage.show();
+            civGame.init();
+        } else {
+            LOGGER.debug("error during init");
+            Platform.exit();
+            System.exit(0);
+        }
+    }
+
+    private boolean wasInitSuccessFul() {
+        boolean conditionOnRoot = root != null;
+        LOGGER.debug("check root:{}, success={}", root, conditionOnRoot);
+        return conditionOnRoot;
+    }
+
 
 }
