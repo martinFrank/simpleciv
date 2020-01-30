@@ -1,0 +1,33 @@
+Principles of MVC design
+
+ - Controllers are written to compute answers and to control/enforce the proper use of models (the
+   "proper use" is the "protocol" or the "rules of the game"), so controllers are typically coupled
+   to (depend on) the models they control.
+ - Output views are coupled to models, because the purpose of an output view is to display/pretty-print
+   information embedded in a model. No component should be coupled to an output view.
+ - Models should not be coupled to any other assembly.
+ - If they are coupled to any other component, an input view is coupled to the controller that does
+   the computation requested by the input event. No component should be coupled to an input view.
+
+
+
+
+
+The novelty is the delegate declaration, which is a "method interface". The output view's update
+method matches (implements) the Observer delegate and it is registered with the controller, in
+its registry. The Main method assembles the system and registers the Observer(s):
+
+public void Main() {
+   Model m = new Model();
+   Controller c = new Controller(m);
+   InputViewForm i = new InputViewForm(c);
+   OutputViewForm f = new OutputViewForm(m);
+   c.register(f.update);  // note that  f.update  has type  Observer
+   ...
+   Application.Run(i);  // give control to the input view --- it's now a reactive system
+}
+
+When the controller does a model update, all methods saved in registry are called. So, the
+controller is not coupled to any view. This makes it easy to extend the system to have multiple
+forms (views) for inputs and outputs, like a spreadsheet or IDE does. It is a standard technique
+in systems building, maybe the most important one you will learn in this course.

@@ -1,20 +1,22 @@
 package com.github.martinfrank.simpleciv.gui;
 
-import com.github.martinfrank.simpleciv.game.CivGame;
+import com.github.martinfrank.simpleciv.game.Game;
 import javafx.util.Callback;
 
 public class ControllerFactory implements Callback<Class<?>, Object> {
 
-    private final CivGame game;
+    private final Game game;
 
-    public ControllerFactory(CivGame game) {
+    private RootController rootController;
+
+    public ControllerFactory(Game game) {
         this.game = game;
     }
 
     @Override
     public Object call(Class<?> type) {
         if (type == RootController.class) {
-            RootController rootController = new RootController(game);
+            rootController = new RootController(game);
             game.setRootController(rootController);
             return rootController;
         } else {
@@ -27,5 +29,10 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
             }
         }
     }
+
+    public RootController getRootController() {
+        return rootController;
+    }
+
 
 }

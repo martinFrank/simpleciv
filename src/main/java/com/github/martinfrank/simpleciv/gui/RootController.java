@@ -1,6 +1,6 @@
 package com.github.martinfrank.simpleciv.gui;
 
-import com.github.martinfrank.simpleciv.game.CivGame;
+import com.github.martinfrank.simpleciv.game.Game;
 import com.github.martinfrank.simpleciv.map.CivMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +14,7 @@ public class RootController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RootController.class);
     private GuiEventListener eventListener;
-    private final CivGame civGame;
+    private final Game civGame;
 
     @FXML
     private CivMapCanvas mapCanvas;
@@ -23,7 +23,7 @@ public class RootController {
     private TextArea console;
 
 
-    public RootController(CivGame civGame) {
+    public RootController(Game civGame) {
         this.civGame = civGame;
     }
 

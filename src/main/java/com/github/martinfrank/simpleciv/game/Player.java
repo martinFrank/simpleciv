@@ -1,5 +1,6 @@
 package com.github.martinfrank.simpleciv.game;
 
+import com.github.martinfrank.simpleciv.game.advisor.Advisers;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -12,8 +13,11 @@ public class Player {
     private final String name;
     private final Color color;
     private final List<Settlement> settlements = new ArrayList<>();
+    private final Advisers advisors;
+    private final Game game;
 
-    public Player() {
+    public Player(Game game) {
+        this.game = game;
         int length = 4 + random.nextInt(4);
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < length; i++) {
@@ -22,11 +26,12 @@ public class Player {
         }
         name = sb.toString();
         color = new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1);
+        advisors = new Advisers(game, this);
     }
 
 
     public void playTurn() {
-
+        advisors.executeStartAdvices();
     }
 
     public void gatherResources() {

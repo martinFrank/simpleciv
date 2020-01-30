@@ -2,11 +2,15 @@ package com.github.martinfrank.simpleciv.mapdata;
 
 import com.github.martinfrank.simpleciv.game.Player;
 import com.github.martinfrank.simpleciv.game.Settlement;
+import com.github.martinfrank.simpleciv.game.unit.Unit;
+
+import java.util.List;
 
 public class CivMapFieldData {
 
     private Settlement settlement;
     private Player owner;
+    private List<Unit> units;
 
     public double getWalkCostFactor() {
         return 1;
@@ -31,5 +35,9 @@ public class CivMapFieldData {
     @Override
     public String toString() {
         return "settlement: " + settlement + " owner:" + owner;
+    }
+
+    public List<Unit> getUnits() {
+        return units;
     }
 }

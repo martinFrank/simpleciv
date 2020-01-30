@@ -8,10 +8,10 @@ public class Players {
     private List<Player> players;
     private int currentPlayerIndex;
 
-    public Players(int amountPlayer) {
+    public Players(int amountPlayer, Game game) {
         players = new ArrayList<>();
         for (int i = 0; i < amountPlayer; i++) {
-            players.add(new Player());
+            players.add(new Player(game));
         }
     }
 
@@ -24,5 +24,9 @@ public class Players {
 
     public Player getCurrent() {
         return players.get(currentPlayerIndex);
+    }
+
+    public int size() {
+        return players.size();
     }
 }
