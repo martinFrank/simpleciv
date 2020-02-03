@@ -2,6 +2,7 @@ package com.github.martinfrank.simpleciv.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Players {
 
@@ -28,5 +29,9 @@ public class Players {
 
     public int size() {
         return players.size();
+    }
+
+    public List<Player> getAllExceptCurrent() {
+        return players.stream().filter(p -> !p.equals(getCurrent())).collect(Collectors.toList());
     }
 }

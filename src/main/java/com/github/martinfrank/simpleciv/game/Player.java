@@ -34,7 +34,11 @@ public class Player {
         advisors.executeStartAdvices();
     }
 
+    //FIXME maybe better name
     public void gatherResources() {
+        for (Settlement settlement : settlements) {
+            settlement.addProductivity();
+        }
     }
 
     public Color getColor() {

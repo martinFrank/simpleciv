@@ -5,7 +5,7 @@ import com.github.martinfrank.drawlib.Shape;
 import com.github.martinfrank.maplib.MapField;
 import com.github.martinfrank.simpleciv.game.Player;
 import com.github.martinfrank.simpleciv.game.Settlement;
-import com.github.martinfrank.simpleciv.game.unit.Unit;
+import com.github.martinfrank.simpleciv.game.Unit;
 import com.github.martinfrank.simpleciv.mapdata.CivMapFieldData;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -56,6 +56,21 @@ public class CivMapField extends MapField<CivMapFieldData, CivMapField, CivMapEd
             gc.fillOval(minW + w, minH + h, 2d * w, 2d * h);
         }
 
+        if (!getData().getUnits().isEmpty()) {
+            //FIXME draw unit
+
+            Point point = shape.getCenter();
+            double minW = shape.getPoints().stream().mapToDouble(Point::getX).min().orElse(0);
+            double maxW = shape.getPoints().stream().mapToDouble(Point::getX).max().orElse(0);
+
+            double minH = shape.getPoints().stream().mapToDouble(Point::getY).min().orElse(0);
+            double maxH = shape.getPoints().stream().mapToDouble(Point::getY).max().orElse(0);
+            double w = (maxW - minW) / 8d;
+            double h = (maxH - minH) / 8d;
+            gc.setFill(Color.YELLOW);
+            gc.fillOval(minW + w, minH + h, 4d * w, 4d * h);
+        }
+
     }
 
     @Override
@@ -69,8 +84,19 @@ public class CivMapField extends MapField<CivMapFieldData, CivMapField, CivMapEd
 
     public List<Unit> getUnits(Player player) {
         if (getData() != null && getData().getUnits() != null) {
-            return getData().getUnits().stream().filter(u -> u.getOwner.equals(player)).collect(Collectors.toList());
+            return getData().getUnits().stream().filter(u -> u.getOwner().equals(player)).collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    public Settlement getSettlement() {
+        if (getData() != null && getData().getSettlement() != null) {
+            return getData().getSettlement();
+        }
+        return null;
+    }
+
+    public void addUnit(Unit unit) {
+        getData().getUnits().add(unit);
     }
 }

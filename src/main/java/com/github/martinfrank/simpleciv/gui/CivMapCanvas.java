@@ -1,6 +1,5 @@
 package com.github.martinfrank.simpleciv.gui;
 
-import com.github.martinfrank.drawlib.Shape;
 import com.github.martinfrank.simpleciv.map.CivMap;
 import javafx.scene.canvas.Canvas;
 import org.slf4j.Logger;
@@ -15,14 +14,18 @@ public class CivMapCanvas extends Canvas {
 
     public void setMap(CivMap map) {
         this.map = map;
-        Shape aField = map.getFields().get(0).getShape();
-        double fieldHeight = aField.getTransformed().getHeight();
-        setWidth(map.getTransformed().getWidth());
-        if (map.getRows() % 2 == 1) {
-            setHeight(map.getTransformed().getHeight() - fieldHeight * 1.5);
-        } else {
-            setHeight(map.getTransformed().getHeight());
-        }
+        int h = (int) map.getTransformed().getHeight();
+        int w = (int) map.getTransformed().getWidth();
+        setHeight(h);
+        setWidth(w);
+//        Shape aField = map.getFields().get(0).getShape();
+//        double fieldHeight = aField.getTransformed().getHeight();
+//        setWidth(map.getTransformed().getWidth());
+//        if (map.getRows() % 2 == 1) {
+//            setHeight(map.getTransformed().getHeight() - fieldHeight * 1.5);
+//        } else {
+//            setHeight(map.getTransformed().getHeight());
+//        }
         drawMap();
     }
 

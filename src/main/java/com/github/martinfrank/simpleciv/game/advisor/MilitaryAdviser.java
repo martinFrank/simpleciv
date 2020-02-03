@@ -1,8 +1,6 @@
 package com.github.martinfrank.simpleciv.game.advisor;
 
-import com.github.martinfrank.simpleciv.game.Game;
-import com.github.martinfrank.simpleciv.game.Player;
-import com.github.martinfrank.simpleciv.game.unit.Unit;
+import com.github.martinfrank.simpleciv.game.*;
 import com.github.martinfrank.simpleciv.map.CivMapField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +32,20 @@ public class MilitaryAdviser extends BaseAdviser<Advice.Military> {
 
     public void execute(Advice.Military military) {
         LOGGER.debug("working on advice {}", military);
+        if (military == Advice.Military.MELEE) {
+            List<Settlement> settlements = getGame().getSettlements(getPlayer());
+            for (Settlement settlement : settlements) {
+                //FIXME check if production can be changed
+                LOGGER.debug("change production of settlement {} to MELEE", settlement);
+                List<UnitTemplate> unitTypes = settlement.getUnitTypes();
+                UnitTemplate unitType = getBestUnitTypeForSettlement(unitTypes, settlement, getGame(), getPlayer());
+                settlement.setProduction(unitType);
+            }
+        }
+    }
+
+    private UnitTemplate getBestUnitTypeForSettlement(List<UnitTemplate> unitTypes, Settlement settlement, Game game, Player player) {
+        return unitTypes.get(0);
     }
 
 }

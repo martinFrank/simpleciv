@@ -2,15 +2,16 @@ package com.github.martinfrank.simpleciv.mapdata;
 
 import com.github.martinfrank.simpleciv.game.Player;
 import com.github.martinfrank.simpleciv.game.Settlement;
-import com.github.martinfrank.simpleciv.game.unit.Unit;
+import com.github.martinfrank.simpleciv.game.Unit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CivMapFieldData {
 
     private Settlement settlement;
     private Player owner;
-    private List<Unit> units;
+    private List<Unit> units = new ArrayList<>();
 
     public double getWalkCostFactor() {
         return 1;
