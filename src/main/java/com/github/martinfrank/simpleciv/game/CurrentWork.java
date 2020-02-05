@@ -4,7 +4,7 @@ public class CurrentWork {
 
     private ProductionTemplate productionTemplate;
 
-    private double currentWork;
+    private double progress;
 
     public void setProduction(ProductionTemplate unitType) {
         //resetAll();
@@ -12,12 +12,12 @@ public class CurrentWork {
     }
 
     public void add(double productivity) {
-        this.currentWork = currentWork + productivity;
+        this.progress = progress + productivity;
     }
 
     public boolean isFinished() {
         if (productionTemplate != null) {
-            return currentWork >= productionTemplate.getProductionCosts();
+            return progress >= productionTemplate.getProductionCosts();
         }
         return false;
     }

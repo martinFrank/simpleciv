@@ -40,14 +40,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!--        <sonar.host.url>https://sonarcloud.io</sonar.host.url>-->
-        <!--        <sonar.login>ecff518fe83f716c64868d96bf756b0602f9512f</sonar.login>-->
-        <!--        <sonar.projectKey>martinFrank_cli</sonar.projectKey>-->
-        <!--        <sonar.organization>martinfrank-github</sonar.organization>-->
-        <!--        <sonar.language>java</sonar.language>-->
-        <!--        <sonar.scm.provider>git</sonar.scm.provider>-->
-        <!--        <sonar.java.libraries>target</sonar.java.libraries>-->
-        <!--        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>-->
+
+        <sonar.projectKey>martinFrank_simpleciv</sonar.projectKey>
+        <sonar.organization>martinfrank-github</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.login>5849d4c1c83b5f8959a4058bef6d0a694ae378e4</sonar.login>
+        <sonar.language>java</sonar.language>
+        <sonar.scm.provider>git</sonar.scm.provider>
+        <sonar.java.libraries>target</sonar.java.libraries>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <distributionManagement>

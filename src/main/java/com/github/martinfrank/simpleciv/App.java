@@ -2,7 +2,6 @@ package com.github.martinfrank.simpleciv;
 
 import com.github.martinfrank.simpleciv.game.Game;
 import com.github.martinfrank.simpleciv.gui.ControllerFactory;
-import com.github.martinfrank.simpleciv.gui.RootController;
 import com.github.martinfrank.simpleciv.res.ResourceManager;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,30 +23,21 @@ public class App extends Application {
     }
 
     private Game game;
-    private RootController rootController;
     private Pane root;
 
     @Override
     public void init() {
         ResourceManager resourceManager = new ResourceManager(getClass().getClassLoader());
-        game = new Game(resourceManager);//model
+        game = new Game(resourceManager);
         ControllerFactory controllerFactory = new ControllerFactory(game);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(resourceManager.getGuiRoot());
-            fxmlLoader.setControllerFactory(controllerFactory); //new Controller(model)
+            fxmlLoader.setControllerFactory(controllerFactory);
             root = fxmlLoader.load();
         } catch (IOException e) {
             LOGGER.debug("error", e);
         }
 
-
-//        Model m = new Model();
-//        Controller c = new Controller(m);
-//        InputViewForm i = new InputViewForm(c);
-//        OutputViewForm f = new OutputViewForm(m);
-//        c.register(f.update);  // note that  f.update  has type  Observer
-//        ...
-//        Application.Run(i);  // give control to the input view --- it's now a reactive system
     }
 
     @Override

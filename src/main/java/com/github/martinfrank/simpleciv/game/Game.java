@@ -50,37 +50,77 @@ public class Game implements GuiEventListener {
     private void addPlayersToMap() {
         for (int i = 0; i < players.size(); i++) {
             Player current = players.getCurrent();
-            CivMapField field;
-            if (i == 0) {
-                field = civMap.getRandomField(random);
-            } else {
-                field = randomWithMinimumDistance(4);
-            }
+            CivMapField field = randomWithMinimumDistance(4, current);
             Settlement capital = new Settlement(current, field);
+            if (i == 0) {
+                capital.culture = 11;
+            }
             current.addSettlement(capital);
             field.getData().setSettlement(capital);
             field.getData().setOwner(current);
-            //settting the area around a city -> Should be done via culture
-            field.getFields().forEach(f -> f.getData().setOwner(current));
             players.next();
         }
+        applyCulture();
     }
 
-    private CivMapField randomWithMinimumDistance(int distance) {
+    //wirkung von Kultur auf die Karte
+    public void applyCulture() {
+        civMap.getFields().forEach(f -> f.getData().clearCulture());//clear all culture
+        for (Player player : players.getAll()) {
+            for (Settlement settlement : getSettlements(player)) {
+                applyCultureOfSettlement(settlement, player);
+            }
+        }
+        civMap.getFields().forEach(f -> f.getData().setOwnerByCulture());//clear all culture
+    }
+
+    private void applyCultureOfSettlement(Settlement settlement, Player player) {
+        double culture = settlement.getCulture();
+        int radius = (int) Math.log10(culture);
+        CivMapField center = settlement.getField();
+        LOGGER.debug("radius:{}", radius);
+        for (int r = 1; r <= radius; r++) {
+            double distanceFactor = 10d * Math.pow(10, (-1 * r));
+            LOGGER.debug("distanceFactor:{}", distanceFactor);
+            double effectiveCulture = culture * distanceFactor;
+            LOGGER.debug("effectiveCulture:{}", effectiveCulture);
+            List<CivMapField> circle = civMap.getFields(center, r);
+            circle.forEach(f -> f.getData().getCultureMap().addCulture(effectiveCulture, player));
+        }
+
+        //1 * culture for radius 1
+        //0.1 * culture for radius 2
+        //0.01 * culture for radius 3
+    }
+
+    private CivMapField randomWithMinimumDistance(int distance, Player current) {
         while (true) {
             CivMapField field = civMap.getRandomField(random);
-            if (field.getFields().size() != 6) {
-                continue;
-            }
-            for (Player p : players.getAllExceptCurrent()) {
-                if (!getSettlements(p).isEmpty()) {
-                    Settlement settlement = getSettlements(p).get(0);
-                    List<CivMapField> path = civMap.aStar(settlement.getField(), field, walker, 100);
-                    if (path.size() >= distance) {
-                        return field;
+            boolean hasFailed = false;
+            for (int r = 0; r < distance; r++) {
+                List<CivMapField> inRadius = civMap.getFields(field, r + 1);
+                if (r == 0 && inRadius.size() != 6) {
+                    hasFailed = true;
+                    break;
+                }
+                if (r == 1 && inRadius.size() != 12) {
+                    hasFailed = true;
+                    break;
+                }
+                for (CivMapField fieldInRadius : inRadius) {
+                    if (fieldInRadius.getSettlement() != null && !fieldInRadius.getSettlement().isOwnedBy(current)) {
+                        hasFailed = true;
+                        break;
                     }
                 }
+                if (hasFailed) {
+                    break;
+                }
             }
+            if (hasFailed) {
+                continue;
+            }
+            return field;
         }
     }
 
@@ -98,7 +138,7 @@ public class Game implements GuiEventListener {
     private void createMap() {
         CivMapPartFactory mapPartFactory = new CivMapPartFactory();
         CivMapFactory mapFactory = new CivMapFactory(mapPartFactory);
-        civMap = mapFactory.createMap(20, 12, MapStyle.HEX_HORIZONTAL);
+        civMap = mapFactory.createMap(32, 16, MapStyle.HEX_HORIZONTAL);
         civMap.scale(6f);
         walker = mapPartFactory.createWalker();
     }

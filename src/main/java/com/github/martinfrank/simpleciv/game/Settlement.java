@@ -10,9 +10,9 @@ public class Settlement {
     private final Player owner;
     private final CivMapField field;
     private final List<SettlementImprovement> improvements = new ArrayList<>();
-    //FIXME maybe UnitType is not sufficent enough
     private CurrentWork currentWork = new CurrentWork();
-    private double productvity = 10;
+    public double culture = 10; //FIXME
+    private double productivity = 10;
     private double residents = 1000;
     private double foodConsumption = 10;
 
@@ -27,6 +27,9 @@ public class Settlement {
     }
 
     public boolean isOwnedBy(Player player) {
+        if (owner == null) {
+            return player != null;
+        }
         return owner.equals(player);
     }
 
@@ -40,16 +43,20 @@ public class Settlement {
         return unitTypes;
     }
 
-    //FIXME maybe UnitType is not sufficent enough
-    public void setProduction(UnitTemplate unitType) {
-        currentWork.setProduction(unitType);
+    public void setProduction(ProductionTemplate productionTemplate) {
+        currentWork.setProduction(productionTemplate);
     }
 
     public void addProductivity() {
-        currentWork.add(productvity);
+        currentWork.add(productivity);
         if (currentWork.isFinished()) {
             currentWork.deploy(owner, this);
             //FIXME remove currentWork
         }
     }
+
+    public double getCulture() {
+        return culture;
+    }
+
 }
