@@ -23,14 +23,12 @@ public class App extends Application {
         launch(args);
     }
 
-    private Game game;
-    private RootController rootController;
     private Pane root;
 
     @Override
     public void init() {
         ResourceManager resourceManager = new ResourceManager(getClass().getClassLoader());
-        game = new Game(resourceManager);
+        Game game = new Game(resourceManager);
         ControllerFactory controllerFactory = new ControllerFactory(game);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(resourceManager.getGuiRoot());
@@ -39,7 +37,9 @@ public class App extends Application {
         } catch (IOException e) {
             LOGGER.debug("error", e);
         }
-        rootController = controllerFactory.getRootController();
+        RootController rootController = controllerFactory.getRootController();
+        game.init();
+        rootController.init();
     }
 
     @Override
@@ -48,8 +48,6 @@ public class App extends Application {
             stage.setScene(new Scene(root));
             stage.setTitle("tbd: set title");
             stage.show();
-            game.init();
-            rootController.init();
         } else {
             LOGGER.debug("error during init");
             Platform.exit();
