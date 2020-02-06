@@ -58,17 +58,17 @@ public class CivMapField extends MapField<CivMapFieldData, CivMapField, CivMapEd
 
         if (!getData().getUnits().isEmpty()) {
             //FIXME draw unit
-
             Point point = shape.getCenter();
             double minW = shape.getPoints().stream().mapToDouble(Point::getX).min().orElse(0);
             double maxW = shape.getPoints().stream().mapToDouble(Point::getX).max().orElse(0);
 
             double minH = shape.getPoints().stream().mapToDouble(Point::getY).min().orElse(0);
             double maxH = shape.getPoints().stream().mapToDouble(Point::getY).max().orElse(0);
+
             double w = (maxW - minW) / 8d;
             double h = (maxH - minH) / 8d;
             gc.setFill(Color.YELLOW);
-            gc.fillOval(minW + w, minH + h, 4d * w, 4d * h);
+            gc.fillOval(minW + w, minH + h, 2d * w, 2d * h);
         }
 
     }

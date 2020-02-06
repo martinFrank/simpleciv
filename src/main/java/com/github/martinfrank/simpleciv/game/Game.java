@@ -3,7 +3,6 @@ package com.github.martinfrank.simpleciv.game;
 import com.github.martinfrank.maplib.MapStyle;
 import com.github.martinfrank.simpleciv.gui.GuiEventListener;
 import com.github.martinfrank.simpleciv.gui.MouseSelection;
-import com.github.martinfrank.simpleciv.gui.RootController;
 import com.github.martinfrank.simpleciv.map.*;
 import com.github.martinfrank.simpleciv.res.ResourceManager;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ public class Game implements GuiEventListener {
     private CivMapWalker walker;
     private final Random random = new Random();
     private final ResourceManager resourceManager;
-    private RootController rootController;
 
     public Game(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
@@ -36,24 +34,19 @@ public class Game implements GuiEventListener {
         players.getCurrent().playTurn();
     }
 
-    public void setRootController(RootController rootController) {
-        this.rootController = rootController;
-    }
-
     public void init() {
         createMap();
         createPlayers();
         addPlayersToMap();
-        createGui();
     }
 
     private void addPlayersToMap() {
         for (int i = 0; i < players.size(); i++) {
             Player current = players.getCurrent();
-            CivMapField field = randomWithMinimumDistance(4, current);
+            CivMapField field = civMap.randomWithMinimumDistance(4, current, random);
             Settlement capital = new Settlement(current, field);
             if (i == 0) {
-                capital.culture = 11;
+                capital.culture = 123;
             }
             current.addSettlement(capital);
             field.getData().setSettlement(capital);
@@ -78,57 +71,16 @@ public class Game implements GuiEventListener {
         double culture = settlement.getCulture();
         int radius = (int) Math.log10(culture);
         CivMapField center = settlement.getField();
-        LOGGER.debug("radius:{}", radius);
         for (int r = 1; r <= radius; r++) {
             double distanceFactor = 10d * Math.pow(10, (-1 * r));
-            LOGGER.debug("distanceFactor:{}", distanceFactor);
             double effectiveCulture = culture * distanceFactor;
-            LOGGER.debug("effectiveCulture:{}", effectiveCulture);
             List<CivMapField> circle = civMap.getFields(center, r);
             circle.forEach(f -> f.getData().getCultureMap().addCulture(effectiveCulture, player));
         }
-
-        //1 * culture for radius 1
-        //0.1 * culture for radius 2
-        //0.01 * culture for radius 3
-    }
-
-    private CivMapField randomWithMinimumDistance(int distance, Player current) {
-        while (true) {
-            CivMapField field = civMap.getRandomField(random);
-            boolean hasFailed = false;
-            for (int r = 0; r < distance; r++) {
-                List<CivMapField> inRadius = civMap.getFields(field, r + 1);
-                if (r == 0 && inRadius.size() != 6) {
-                    hasFailed = true;
-                    break;
-                }
-                if (r == 1 && inRadius.size() != 12) {
-                    hasFailed = true;
-                    break;
-                }
-                for (CivMapField fieldInRadius : inRadius) {
-                    if (fieldInRadius.getSettlement() != null && !fieldInRadius.getSettlement().isOwnedBy(current)) {
-                        hasFailed = true;
-                        break;
-                    }
-                }
-                if (hasFailed) {
-                    break;
-                }
-            }
-            if (hasFailed) {
-                continue;
-            }
-            return field;
-        }
-    }
-
-    private void createGui() {
-        rootController.init();
-        rootController.setGuiEventListener(this);
-        rootController.setMap(civMap);
-        rootController.redrawMap();
+        // radius 1 == settlement
+        //1 * culture for radius 2
+        //0.1 * culture for radius 3
+        //0.01 * culture for radius 4
     }
 
     private void createPlayers() {
@@ -162,5 +114,9 @@ public class Game implements GuiEventListener {
         List<Settlement> settlements = new ArrayList<>();
         civMap.getFields().stream().filter(f -> f.getSettlement() != null && f.getSettlement().isOwnedBy(player)).forEach(f -> settlements.add(f.getSettlement()));
         return settlements;
+    }
+
+    public CivMap getMap() {
+        return civMap;
     }
 }

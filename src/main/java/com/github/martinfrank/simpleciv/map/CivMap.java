@@ -2,6 +2,7 @@ package com.github.martinfrank.simpleciv.map;
 
 import com.github.martinfrank.maplib.Map;
 import com.github.martinfrank.maplib.MapStyle;
+import com.github.martinfrank.simpleciv.game.Player;
 import com.github.martinfrank.simpleciv.mapdata.CivMapData;
 
 import java.util.ArrayList;
@@ -42,5 +43,36 @@ public class CivMap extends Map<CivMapData, CivMapField, CivMapEdge, CivMapNode,
             inside.addAll(fields);
         }
         return fields;
+    }
+
+    public CivMapField randomWithMinimumDistance(int distance, Player current, Random random) {
+        while (true) {
+            CivMapField field = getRandomField(random);
+            boolean hasFailed = false;
+            for (int r = 0; r < distance; r++) {
+                List<CivMapField> inRadius = getFields(field, r + 1);
+                if (r == 0 && inRadius.size() != 6) {
+                    hasFailed = true;
+                    break;
+                }
+                if (r == 1 && inRadius.size() != 12) {
+                    hasFailed = true;
+                    break;
+                }
+                for (CivMapField fieldInRadius : inRadius) {
+                    if (fieldInRadius.getSettlement() != null && !fieldInRadius.getSettlement().isOwnedBy(current)) {
+                        hasFailed = true;
+                        break;
+                    }
+                }
+                if (hasFailed) {
+                    break;
+                }
+            }
+            if (hasFailed) {
+                continue;
+            }
+            return field;
+        }
     }
 }

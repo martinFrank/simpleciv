@@ -2,6 +2,7 @@ package com.github.martinfrank.simpleciv;
 
 import com.github.martinfrank.simpleciv.game.Game;
 import com.github.martinfrank.simpleciv.gui.ControllerFactory;
+import com.github.martinfrank.simpleciv.gui.RootController;
 import com.github.martinfrank.simpleciv.res.ResourceManager;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -23,6 +24,7 @@ public class App extends Application {
     }
 
     private Game game;
+    private RootController rootController;
     private Pane root;
 
     @Override
@@ -37,7 +39,7 @@ public class App extends Application {
         } catch (IOException e) {
             LOGGER.debug("error", e);
         }
-
+        rootController = controllerFactory.getRootController();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class App extends Application {
             stage.setTitle("tbd: set title");
             stage.show();
             game.init();
+            rootController.init();
         } else {
             LOGGER.debug("error during init");
             Platform.exit();

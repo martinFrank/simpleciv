@@ -17,7 +17,6 @@ public class ControllerFactory implements Callback<Class<?>, Object> {
     public Object call(Class<?> type) {
         if (type == RootController.class) {
             rootController = new RootController(game);
-            game.setRootController(rootController);
             return rootController;
         } else {
             // default behavior for controllerFactory:

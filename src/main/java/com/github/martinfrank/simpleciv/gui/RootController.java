@@ -25,6 +25,7 @@ public class RootController {
 
     public RootController(Game civGame) {
         this.civGame = civGame;
+        setGuiEventListener(civGame);
     }
 
 
@@ -36,10 +37,12 @@ public class RootController {
             MouseSelection selection = mapCanvas.getSelectionAt(x, y);
             eventListener.mouseSelect(selection);
         });
+        setMap(civGame.getMap());
     }
 
     public void setMap(CivMap map) {
         mapCanvas.setMap(map);
+        redrawMap();
     }
 
     public void setGuiEventListener(GuiEventListener eventListener) {
@@ -56,5 +59,6 @@ public class RootController {
 
     public void endTurnButton(ActionEvent actionEvent) {
         civGame.endTurn();
+        redrawMap();
     }
 }
