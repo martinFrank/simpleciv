@@ -15,4 +15,8 @@ public class MathTest {
         double e2 = (int) Math.log10(n2);
         Assert.assertEquals(1, e2, 0.002);
     }
+
+    @Test
+    public void createTest() {
+    }
 }

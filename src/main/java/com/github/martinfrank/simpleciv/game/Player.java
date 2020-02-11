@@ -9,15 +9,14 @@ import java.util.Random;
 
 public class Player {
 
-    private final Random random = new Random();
+    private final Random random;
     private final String name;
     private final Color color;
     private final List<Settlement> settlements = new ArrayList<>();
     private final Advisers advisors;
-    private final Game game;
 
-    public Player(Game game) {
-        this.game = game;
+    public Player(Game game, Random random) {
+        this.random = random;
         int length = 4 + random.nextInt(4);
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < length; i++) {

@@ -2,6 +2,7 @@ package com.github.martinfrank.simpleciv.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Players {
@@ -9,10 +10,17 @@ public class Players {
     private List<Player> allPlayers;
     private int currentPlayerIndex;
 
-    public Players(int amountPlayer, Game game) {
+    public Players(int amountPlayer, Game game, Random random) {
         allPlayers = new ArrayList<>();
         for (int i = 0; i < amountPlayer; i++) {
-            allPlayers.add(new Player(game));
+            allPlayers.add(new Player(game, random));
+        }
+    }
+
+    public Players(NewGameParameters parameters, Game game, Random random) {
+        allPlayers = new ArrayList<>();
+        for (int i = 0; i < parameters.getPlayers().size(); i++) {
+            allPlayers.add(new Player(game, random));
         }
     }
 

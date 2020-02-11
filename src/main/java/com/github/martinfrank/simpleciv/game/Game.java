@@ -30,13 +30,18 @@ public class Game implements GuiEventListener {
     public void endTurn() {
         players.next();
         LOGGER.debug("now its turn of player {}", players.getCurrent());
+        //start of next players turn
         players.getCurrent().gatherResources();
         players.getCurrent().playTurn();
     }
 
     public void init() {
+        startNewGame(new NewGameParameters());
+    }
+
+    private void startNewGame(NewGameParameters parameters) {
         createMap();
-        createPlayers();
+        createPlayers(parameters);
         addPlayersToMap();
     }
 
@@ -83,8 +88,8 @@ public class Game implements GuiEventListener {
         //0.01 * culture for radius 4
     }
 
-    private void createPlayers() {
-        players = new Players(3, this);
+    private void createPlayers(NewGameParameters parameters) {
+        players = new Players(parameters, this, random);
     }
 
     private void createMap() {
