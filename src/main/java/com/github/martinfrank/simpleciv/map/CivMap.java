@@ -17,10 +17,10 @@ public class CivMap extends Map<CivMapData, CivMapField, CivMapEdge, CivMapNode,
         super(width, height, style, mapData);
     }
 
-    @Override
-    public void draw(Object drawContext) {
-        getFields().forEach(f -> f.draw(drawContext));
-    }
+//    @Override
+//    public void draw(Object drawContext) {
+//        getFields().forEach(f -> f.draw(drawContext));
+//    }
 
 
     public CivMapField getRandomField(Random random) {

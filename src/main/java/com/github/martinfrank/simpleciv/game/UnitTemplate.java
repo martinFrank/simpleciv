@@ -24,6 +24,7 @@ public class UnitTemplate implements ProductionTemplate {
     @Override
     public void deploy(Player owner, Settlement settlement) {
         Unit unit = new Unit(this, owner);
+        owner.getUnits().add(unit);
         settlement.getField().addUnit(unit);
     }
 }
